@@ -5,15 +5,16 @@ export default {
     name: "employee",
     component: Layout,
     meta: {},
+    // redirect: '/employee/personInfo',
     children: [
         {
-            path: "/employee/personInfo",
+            path: "personInfo",
             name: "personInfo",
             component: () => import('../pages/employee/personInfo.vue'),
             meta: {},
         },
         {
-            path: "/employee/postChange",
+            path: "postChange",
             name: "postChange",
             component: () => import('../pages/employee/postChange.vue'),
             meta: {},

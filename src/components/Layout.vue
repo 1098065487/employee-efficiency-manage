@@ -2,7 +2,7 @@
     <div>
         <div class="all-header">
             <div class="header-name">
-                <!--                外包用工效能管理平台-->
+                外包用工效能管理平台
             </div>
             <el-dropdown size="small" trigger="click" placement="bottom" @command="handleMenuClick">
                 <span class="header-user">
@@ -14,20 +14,19 @@
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
-        <div class="all-content">
-            <div v-if="$store.state.menus && $store.state.menus.length !== 0">
-                <el-menu
+        <div class="layout-menu" v-if="$store.state.menus && $store.state.menus.length !== 0">
+            <el-menu
                     class="custom-menu"
                     mode="horizontal"
                     :default-active="menuSelected"
                     active-text-color="#01B197"
                     text-color="#666"
                     @select="handleSelect"
-                >
-                    <MenuTree :menu-data="$store.state.menus" :first="true"/>
-                </el-menu>
-            </div>
-
+            >
+                <MenuTree :menu-data="$store.state.menus" :first="true"/>
+            </el-menu>
+        </div>
+        <div class="all-content">
             <router-view/>
         </div>
     </div>
@@ -45,19 +44,34 @@
                 menuSelected: ''
             };
         },
+        watch: {
+          $route: {
+              handler(newVal, oldVal) {
+                  console.log(newVal)
+                  this.menuSelected = newVal.path
+              },
+              deep: true
+          }
+        },
         methods: {
             handleMenuClick(val) {
                 console.log('退出', val)
+
+                this.$router.push({path: '/'})
             },
             handleSelect(val) {
-                console.log(val)
+                // console.log(val)
                 this.menuSelected = val;
                 this.$router.push({path: val})
             }
         },
         created() {
-            console.log(this.$route)
+            // console.log(this.$route)
             this.menuSelected = this.$route.path;
+        },
+        mounted() {
+            console.log('active')
+            // todo 一直动态鉴权，特别是退出后返回
         }
     }
 </script>
@@ -66,8 +80,18 @@
     .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
         background-color: #cfe5e2;
     }
-    .all-content {
-        padding-top: 50px;
+
+    .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
+        background-color: #cfe5e2!important;
+        color: #666!important;
+    }
+
+    .layout-menu {
+        position: fixed;
+        width: 100%;
+        height: 50px;
+        top: 50px;
+        z-index: 999;
 
         .custom-menu {
             padding: 0 50px;
@@ -103,12 +127,19 @@
         }
     }
 
+
+    .all-content {
+        padding-top: 100px;
+    }
+
     .all-header {
         position: fixed;
         width: 100%;
         height: 50px;
+        top: 0;
+        z-index: 999;
         background-color: #01B197;
-        padding: 5px 20px 5px 30px;
+        padding: 5px 20px 5px 40px;
         display: flex;
         align-items: center;
         justify-content: space-between;
